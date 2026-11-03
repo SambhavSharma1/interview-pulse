@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-white text-slate-900">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InterviewPulse | AI Interview & Career Readiness Coach</title>
+  <meta name="description" content="Structured mock interview platform for university students and job seekers. Built For Ostad Presents YUNet AIgnite Buildathon 2026.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js for Radar Chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    /* Clean, crisp structural card styling - no glowing neon or vibe-coded shadows */
+    .clean-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+    }
+
+    /* Subtle breathing animation */
+    @keyframes breatheAnimation {
+      0%, 100% { transform: scale(0.94); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+    .breathe-circle {
+      animation: breatheAnimation 8s ease-in-out infinite;
+    }
+
+    /* Print friendly styles */
+    @media print {
+      body { background: white !important; color: black !important; }
+      .no-print { display: none !important; }
+      .clean-card { background: white !important; border: 1px solid #CBD5E1 !important; box-shadow: none !important; }
+      #view-report { display: block !important; }
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col bg-white text-slate-900 font-sans antialiased selection:bg-slate-200 selection:text-slate-900">
+
+  <!-- =================================================================
+       MANDATORY BUILDATHON BANNER (Fixed Top - Clean Professional Styling)
+       Requirement: "Built For Ostad Presents YUNet AIgnite Buildathon 2026"
+       ================================================================= -->
+  <div class="no-print bg-slate-100 border-b border-slate-200 py-2 px-4 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[10px] uppercase font-bold tracking-wider">
+          Official Entry
+        </span>
+        <span class="font-normal text-slate-700">
+          Built For <strong class="text-slate-900 font-semibold">Ostad Presents YUNet AIgnite Buildathon 2026</strong> &bull; B2C Career Category
+        </span>
+      </div>
+      <div class="flex items-center gap-3">
+        <!-- Quick Instant Demo Button for Judges -->
+        <button id="btn-quick-demo" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs flex items-center gap-1.5 transition">
+          <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
+          <span>Instant Demo for Judges (30s)</span>
+        </button>
+        <button id="btn-api-modal" class="text-xs text-slate-600 hover:text-slate-900 font-medium underline flex items-center gap-1">
+          <i data-lucide="settings" class="w-3 h-3"></i> API Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation -->
+  <header class="no-print border-b border-slate-200 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white font-bold text-sm">
+          IP
+        </div>
+        <div>
+          <span class="text-base font-bold tracking-tight text-slate-900">
+            InterviewPulse
+          </span>
+          <span class="hidden sm:inline-block text-[11px] text-slate-500 font-mono -mt-0.5 block">Mock Interview & Viva Coach</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="btn-nav-history" class="text-xs text-slate-700 hover:text-slate-900 font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
+          <i data-lucide="history" class="w-3.5 h-3.5 text-slate-600"></i>
+          <span>My History</span>
+        </button>
+        <button id="btn-reset-nav" class="hidden text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 flex items-center gap-1.5 transition font-medium">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> New Session
+        </button>
+        <span class="text-xs px-2.5 py-1 rounded bg-slate-100 border border-slate-200 text-slate-700 font-mono">
+          v1.0
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-center bg-white">
+
+    <!-- =================================================================
+         VIEW 1: SETUP & CONFIGURATION SCREEN
+         ================================================================= -->
+    <section id="view-setup" class="space-y-8 animate-fadeIn">
+      <!-- Clean, Professional Headline (NO gradient or blue effect) -->
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium">
+          <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-slate-600"></i> Designed for Freshers, Job Candidates & Embassy Applicants
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 leading-snug">
+          Practice Technical and Viva Interviews with Realistic AI Feedback
+        </h1>
+        <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto">
+          Choose a role or paste your CV. Answer verbally or by text to analyze speech pace (WPM), eliminate filler words, and structure your responses using the STAR method.
+        </p>
+      </div>
+
+      <!-- Setup Card -->
+      <div class="max-w-4xl mx-auto clean-card p-6 sm:p-8 space-y-6">
+        
+        <!-- Step 1: Mode Selection -->
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2.5 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-slate-900 text-white text-xs flex items-center justify-center font-bold">1</span>
+              Select Interview Track
+            </span>
+            <span class="text-xs text-slate-500 font-normal">5 Specialized Contexts</span>
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="role-selector">
+            
+            <!-- Mode 1: Tech / Fresher -->
+            <button type="button" data-role="Tech Software Fresher" class="role-btn active p-3.5 rounded-lg border-2 border-slate-900 bg-slate-50 text-left transition flex flex-col justify-between h-28">
+              <div class="flex items-center justify-between w-full">
+                <i data-lucide="code-2" class="w-4 h-4 text-slate-900"></i>
+                <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-200 text-slate-800 font-semibold">Tech</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-slate-900">Software / IT Fresher</p>
+                <p class="text-[11px] text-slate-500">Python, SQL, React & System Basics</p>
+              </div>
+            </button>
+
+            <!-- Mode 2: Campus / Corporate HR -->
+            <button type="button" data-role="Campus Placement Corporate HR" class="role-btn p-3.5 rounded-lg border border-slate-200 bg-white hover:border-slate-300 text-left transition flex flex-col justify-between h-28">
+              <div class="flex items-center justify-between w-full">
+                <i data-lucide="briefcase" class="w-4 h-4 text-slate-700"></i>
+                <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold">Corporate</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-slate-900">Campus Placement / HR</p>
+                <p class="text-[11px] text-slate-500">Behavioral, STAR Stories & Culture</p>
+              </div>
+            </button>
+
+            <!-- Mode 3: Bank & Govt Job Viva -->
+            <button type="button" data-role="Bank and Government Job Viva" class="role-btn p-3.5 rounded-lg border border-slate-200 bg-white hover:border-slate-300 text-left transition flex flex-col justify-between h-28">
+              <div class="flex items-center justify-between w-full">
+                <i data-lucide="landmark" class="w-4 h-4 text-slate-700"></i>
+                <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold">Govt / Viva</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-slate-900">Bank & Govt Viva (BCS)</p>
+                <p class="text-[11px] text-slate-500">Board pressure & economic reasoning</p>
+              </div>
+            </button>
+
+            <!-- Mode 4: Student Visa & Scholarship -->
+            <button type="button" data-role="Student Visa and Scholarship Interview" class="role-btn p-3.5 rounded-lg border border-slate-200 bg-white hover:border-slate-300 text-left transition flex flex-col justify-between h-28">
+              <div class="flex items-center justify-between w-full">
+                <i data-lucide="plane" class="w-4 h-4 text-slate-700"></i>
+                <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold">Embassy</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-slate-900">Student Visa / Scholarship</p>
+                <p class="text-[11px] text-slate-500">US F1, UK, Chevening & Funds Check</p>
+              </div>
+            </button>
+
+            <!-- Mode 5: Freelancer Client Pitch -->
+            <button type="button" data-role="Freelancer Client-Call Pitch" class="role-btn p-3.5 rounded-lg border border-slate-200 bg-white hover:border-slate-300 text-left transition flex flex-col justify-between h-28">
+              <div class="flex items-center justify-between w-full">
+                <i data-lucide="video" class="w-4 h-4 text-slate-700"></i>
+                <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold">Remote</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-slate-900">Freelancer Client Call</p>
+                <p class="text-[11px] text-slate-500">Discovery calls & Scope pricing</p>
+              </div>
+            </button>
+
+            <!-- Mode 6: AI / ML Specialist -->
+            <button type="button" data-role="AI and Machine Learning Engineer" class="role-btn p-3.5 rounded-lg border border-slate-200 bg-white hover:border-slate-300 text-left transition flex flex-col justify-between h-28">
+              <div class="flex items-center justify-between w-full">
+                <i data-lucide="cpu" class="w-4 h-4 text-slate-700"></i>
+                <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold">AI / ML</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-slate-900">AI & Agentic Systems</p>
+                <p class="text-[11px] text-slate-500">RAG, LangChain, Embeddings & Agents</p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Resume + Job Description Tailoring -->
+        <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+              <span class="w-4 h-4 rounded bg-slate-900 text-white text-[10px] flex items-center justify-center font-bold">2</span>
+              Resume & Job Description Tailoring (Optional)
+            </span>
+            <span class="text-[11px] text-slate-500">Customizes question depth</span>
+          </div>
+          <p class="text-xs text-slate-600">
+            Paste your CV details and target job description below. The AI will target your specific projects and qualifications.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div>
+              <label class="block text-[11px] font-medium text-slate-700 mb-1">Your CV / Profile Summary</label>
+              <textarea id="tailor-resume" rows="2" placeholder="e.g. 2nd-year CSE at GLA University. Built an Agentic RAG system with FAISS and an e-commerce scraper..." class="w-full p-2.5 rounded-md bg-white border border-slate-300 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900"></textarea>
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-700 mb-1">Target Job Description / Visa Details</label>
+              <textarea id="tailor-job" rows="2" placeholder="e.g. Hiring Junior Python Dev with REST APIs, SQL indexing, and clean git workflow..." class="w-full p-2.5 rounded-md bg-white border border-slate-300 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Session Parameters -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <!-- Pressure Mode -->
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">
+              Interview Pressure Level
+            </label>
+            <select id="select-pressure-mode" class="w-full p-2.5 rounded-md bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-900">
+              <option value="gentle">Gentle Mode (Encouraging + Hints)</option>
+              <option value="realistic" selected>Realistic Mode (Standard Panel)</option>
+              <option value="stress">Stress Viva Mode (Strict Probing)</option>
+            </select>
+          </div>
+
+          <!-- Coaching Language -->
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">
+              Feedback Explanation Language
+            </label>
+            <select id="select-language" class="w-full p-2.5 rounded-md bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-900">
+              <option value="en" selected>English (Standard)</option>
+              <option value="bn">বাংলা / Banglish (Local Hints)</option>
+            </select>
+          </div>
+
+          <!-- Session Length -->
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">
+              Questions Count
+            </label>
+            <select id="question-count" class="w-full p-2.5 rounded-md bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-900">
+              <option value="3">Quick Sprint (3 Questions - 5 mins)</option>
+              <option value="5">Full Simulation (5 Questions - 10 mins)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Checkbox Options -->
+        <div class="flex flex-wrap items-center justify-between gap-4 p-3 rounded-lg bg-slate-50 border border-slate-200">
+          <label class="flex items-center gap-2 cursor-pointer text-xs text-slate-700">
+            <input type="checkbox" id="toggle-breathing" class="rounded border-slate-300 text-slate-900 focus:ring-0" checked>
+            <span>Include 8-second box breathing warmup</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-xs text-slate-700">
+            <input type="checkbox" id="toggle-tts" class="rounded border-slate-300 text-slate-900 focus:ring-0" checked>
+            <span>Read questions aloud (Voice Synthesis)</span>
+          </label>
+        </div>
+
+        <!-- Launch Button: Solid, Crisp, Professional -->
+        <button id="btn-start-interview" class="w-full py-3.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm flex items-center justify-center gap-2 transition shadow-sm">
+          <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+          Begin Interview Session
+        </button>
+      </div>
+
+      <!-- Feature Grid -->
+      <div id="how-it-works" class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+        <div class="clean-card p-4 space-y-1.5">
+          <span class="text-[11px] font-mono text-slate-500 font-semibold uppercase">01 &bull; Speech Analytics</span>
+          <h3 class="text-sm font-semibold text-slate-900">Pace & Hesitation Tracking</h3>
+          <p class="text-xs text-slate-600">Calculates your Words Per Minute (WPM) and counts filler words like "um" and "like".</p>
+        </div>
+
+        <div class="clean-card p-4 space-y-1.5">
+          <span class="text-[11px] font-mono text-slate-500 font-semibold uppercase">02 &bull; Methodology</span>
+          <h3 class="text-sm font-semibold text-slate-900">STAR Structure Check</h3>
+          <p class="text-xs text-slate-600">Identifies whether you clearly articulated the Situation, Task, Action, and measurable Result.</p>
+        </div>
+
+        <div class="clean-card p-4 space-y-1.5">
+          <span class="text-[11px] font-mono text-slate-500 font-semibold uppercase">03 &bull; Iteration</span>
+          <h3 class="text-sm font-semibold text-slate-900">Side-by-Side Model Answers</h3>
+          <p class="text-xs text-slate-600">Compare your response with a polished fresher version and re-answer to raise your score.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         PRE-INTERVIEW BREATHING OVERLAY (Clean Neutral Styling)
+         ================================================================= -->
+    <div id="modal-breathing" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="clean-card p-8 max-w-sm w-full text-center space-y-5 shadow-xl">
+        <div class="space-y-1">
+          <span class="text-[10px] font-mono uppercase text-slate-500 tracking-wider">Preparation Protocol</span>
+          <h3 class="text-lg font-bold text-slate-900">Take a Deep Breath</h3>
+          <p class="text-xs text-slate-500">Center your focus before the session starts.</p>
+        </div>
+
+        <!-- Clean Animated Breathing Circle -->
+        <div class="w-36 h-36 mx-auto rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center breathe-circle">
+          <span id="breathing-text" class="text-xs font-semibold text-slate-800">Inhale...</span>
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-xs text-slate-500 font-mono" id="breathing-countdown">Starting interview in 8 seconds...</p>
+          <button id="btn-skip-breathing" class="text-xs text-slate-500 hover:text-slate-900 underline">
+            Skip straight to interview &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================
+         VIEW 2: LIVE INTERVIEW SESSION SCREEN
+         ================================================================= -->
+    <section id="view-session" class="hidden space-y-5 max-w-4xl mx-auto w-full animate-fadeIn">
+      
+      <!-- Session Header Bar -->
+      <div class="clean-card p-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></div>
+          <div>
+            <span id="session-role-badge" class="text-xs font-semibold uppercase tracking-wider text-slate-900 font-mono">
+              Tech Software Fresher
+            </span>
+            <span id="session-pressure-badge" class="text-[11px] text-slate-500 font-medium ml-2">Realistic Mode</span>
+          </div>
+        </div>
+
+        <!-- Timer & Question Counter -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1.5 text-xs font-mono text-slate-700 bg-slate-100 px-3 py-1.5 rounded border border-slate-200 font-medium">
+            <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-500"></i>
+            <span id="session-timer">00:00</span>
+          </div>
+
+          <span id="session-progress" class="text-xs font-mono font-semibold text-slate-900 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded">
+            Q 1 / 3
+          </span>
+        </div>
+      </div>
+
+      <!-- Interviewer Card (NO neon glowing or blue border) -->
+      <div class="clean-card p-6 sm:p-7 space-y-4 border-l-4 border-l-slate-900">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div id="interviewer-avatar" class="w-9 h-9 rounded bg-slate-900 flex items-center justify-center font-bold text-white text-xs">
+              AI
+            </div>
+            <div>
+              <h4 id="interviewer-name" class="text-sm font-bold text-slate-900">Alex (Interviewer)</h4>
+              <p id="interviewer-desc" class="text-[11px] text-slate-500">GLA & Ostad Engineering Panel</p>
+            </div>
+          </div>
+
+          <!-- Repeat Audio Button -->
+          <button id="btn-replay-audio" title="Listen again" class="px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs flex items-center gap-1 transition">
+            <i data-lucide="volume-2" class="w-3.5 h-3.5 text-slate-700"></i>
+            <span>Repeat</span>
+          </button>
+        </div>
+
+        <!-- Question Text Display: Pure Clean High-Contrast Black -->
+        <div class="min-h-[70px] flex items-center">
+          <p id="interviewer-question" class="text-lg sm:text-xl font-medium text-slate-900 leading-relaxed">
+            Preparing your question...
+          </p>
+        </div>
+
+        <!-- Context Hint -->
+        <div id="question-context-box" class="hidden text-xs bg-slate-50 border border-slate-200 p-3 rounded text-slate-700 flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-slate-500 shrink-0 mt-0.5"></i>
+          <span id="question-hint-text">Use the STAR method: explain the Situation, your specific Action, and the measurable Result.</span>
+        </div>
+      </div>
+
+      <!-- Candidate Answer Submission Area -->
+      <div class="clean-card p-6 space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <label class="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+            <i data-lucide="message-square" class="w-3.5 h-3.5 text-slate-600"></i>
+            Your Response (Speak or Type)
+          </label>
+          
+          <!-- Live Speech Metrics Badges -->
+          <div class="flex items-center gap-2">
+            <button type="button" id="btn-mic-toggle" class="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs flex items-center gap-1.5 transition">
+              <i data-lucide="mic" class="w-3.5 h-3.5 text-slate-700" id="mic-icon"></i>
+              <span id="mic-text">Speak Answer</span>
+            </button>
+            <span id="live-wpm" class="text-xs text-slate-700 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded font-mono">0 WPM</span>
+            <span id="live-fillers" class="text-xs text-slate-700 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded font-mono">0 Fillers</span>
+          </div>
+        </div>
+
+        <textarea id="candidate-answer-input" rows="5" placeholder="Type your response or click 'Speak Answer' to talk. Mention your Situation, Action, and measurable Result..." class="w-full p-3.5 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-slate-900 leading-relaxed"></textarea>
+
+        <!-- Action Row -->
+        <div class="flex items-center justify-between pt-1">
+          <button id="btn-request-hint" class="text-xs text-slate-500 hover:text-slate-900 flex items-center gap-1 transition">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> Request hint
+          </button>
+
+          <button id="btn-submit-answer" class="px-5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs flex items-center gap-2 transition shadow-sm">
+            <span>Submit Response</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         VIEW 3: READINESS REPORT (Clean Professional Dashboard)
+         ================================================================= -->
+    <section id="view-report" class="hidden space-y-6 max-w-4xl mx-auto w-full animate-fadeIn">
+      
+      <!-- Top Banner for Final Report -->
+      <div class="clean-card p-6 sm:p-7 text-center space-y-4">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i> Simulation Completed
+        </div>
+
+        <!-- Solid Text Heading (NO gradient clips) -->
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">
+          Interview Readiness Scorecard
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
+          Detailed diagnostic across Speech Cadence (WPM), STAR Completeness, and Technical Precision.
+        </p>
+
+        <!-- Score Gauge & Key Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-3 text-left">
+          <!-- Overall Score Card -->
+          <div class="sm:col-span-1 p-4 rounded-lg bg-slate-50 border border-slate-200 flex flex-col items-center justify-center text-center">
+            <span class="text-[11px] font-mono uppercase text-slate-500 font-semibold">Overall Readiness</span>
+            <!-- Solid Black Score Number -->
+            <div class="text-5xl font-bold text-slate-900 my-1.5 tracking-tight" id="report-overall-score">
+              82
+            </div>
+            <span id="report-verdict-badge" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+              Interview Ready
+            </span>
+          </div>
+
+          <!-- Radar Chart Across 5 Competencies -->
+          <div class="sm:col-span-3 p-3 rounded-lg bg-slate-50 border border-slate-200 flex flex-col items-center justify-center">
+            <span class="text-[11px] font-mono uppercase text-slate-600 font-semibold mb-1">5-Axis Competency Breakdown</span>
+            <div class="w-full max-w-[260px] h-[175px]">
+              <canvas id="radarChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Speech Analysis & STAR Method Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Speech Analytics Card -->
+        <div class="clean-card p-5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div class="flex items-center gap-1.5 text-slate-900 font-semibold text-xs">
+              <i data-lucide="mic" class="w-4 h-4 text-slate-700"></i>
+              Speech Pace & Hesitation
+            </div>
+            <span class="text-[10px] font-mono text-slate-500">Audio Analysis</span>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+              <p class="text-[11px] text-slate-500 font-medium">Average Pace</p>
+              <p class="text-base font-bold text-slate-900" id="report-wpm-metric">135 WPM</p>
+              <p class="text-[10px] text-slate-600">Optimal Pace (120-150)</p>
+            </div>
+            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+              <p class="text-[11px] text-slate-500 font-medium">Hesitation Markers</p>
+              <p class="text-base font-bold text-slate-900" id="report-fillers-metric">4 Fillers</p>
+              <p class="text-[10px] text-slate-500" id="report-fillers-detail">"like" x2, "um" x2</p>
+            </div>
+          </div>
+
+          <p class="text-xs text-slate-600 leading-relaxed" id="report-speech-feedback">
+            You maintained a calm speaking cadence. In question 2, pacing sped up slightly when explaining edge cases—remember to pause between points.
+          </p>
+        </div>
+
+        <!-- STAR Method Breakdown Card -->
+        <div class="clean-card p-5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div class="flex items-center gap-1.5 text-slate-900 font-semibold text-xs">
+              <i data-lucide="check-square" class="w-4 h-4 text-slate-700"></i>
+              STAR Method Completeness
+            </div>
+            <span class="text-[10px] font-mono text-slate-500">Interview Standard</span>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2 text-center" id="star-badges-container">
+            <div class="p-2 rounded bg-slate-50 border border-slate-200">
+              <span class="text-xs font-bold text-slate-900 block">S</span>
+              <span class="text-[10px] text-slate-600">Situation &check;</span>
+            </div>
+            <div class="p-2 rounded bg-slate-50 border border-slate-200">
+              <span class="text-xs font-bold text-slate-900 block">T</span>
+              <span class="text-[10px] text-slate-600">Task &check;</span>
+            </div>
+            <div class="p-2 rounded bg-slate-50 border border-slate-200">
+              <span class="text-xs font-bold text-slate-900 block">A</span>
+              <span class="text-[10px] text-slate-600">Action &check;</span>
+            </div>
+            <div class="p-2 rounded bg-slate-50 border border-slate-200" id="star-result-badge">
+              <span class="text-xs font-bold text-slate-900 block">R</span>
+              <span class="text-[10px] text-slate-600">Result</span>
+            </div>
+          </div>
+
+          <p class="text-xs text-slate-600 leading-relaxed" id="star-summary-text">
+            Strong situation setup and clear action items. Always quantify the <strong>Result</strong> (e.g., "boosted throughput by 30%" or "cut latency by 120ms") for senior marks.
+          </p>
+        </div>
+      </div>
+
+      <!-- Strengths & Specific Diagnostics -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Strengths -->
+        <div class="clean-card p-5 space-y-3">
+          <div class="flex items-center gap-1.5 text-slate-900 font-semibold text-xs border-b border-slate-100 pb-2">
+            <i data-lucide="thumbs-up" class="w-4 h-4 text-slate-700"></i>
+            Key Strengths Identified
+          </div>
+          <ul id="report-strengths-list" class="space-y-2 text-xs text-slate-700">
+            <!-- Dynamically populated -->
+          </ul>
+        </div>
+
+        <!-- Specific Red Flags -->
+        <div class="clean-card p-5 space-y-3">
+          <div class="flex items-center gap-1.5 text-slate-900 font-semibold text-xs border-b border-slate-100 pb-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-slate-700"></i>
+            Actionable Improvement Notes
+          </div>
+          <ul id="report-flags-list" class="space-y-2 text-xs text-slate-700">
+            <!-- Dynamically populated -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- 7-Day Study Plan -->
+      <div class="clean-card p-5 space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <div class="flex items-center gap-1.5 text-slate-900 font-semibold text-xs">
+            <i data-lucide="calendar" class="w-4 h-4 text-slate-700"></i>
+            Personalized 7-Day Recovery Roadmap
+          </div>
+          <span class="text-[10px] font-mono text-slate-500 uppercase">Daily Plan</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-7 gap-2 pt-1" id="report-roadmap-container">
+          <!-- Dynamically populated 7 days -->
+        </div>
+      </div>
+
+      <!-- Question-by-Question Deep Dive with Before/After Model Answers & Try Again -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+            <i data-lucide="list-checks" class="w-4 h-4 text-slate-700"></i>
+            Question Breakdown & Model Answers
+          </h3>
+          <span class="text-xs text-slate-500">Re-answer any question to improve your score</span>
+        </div>
+
+        <div id="report-questions-breakdown" class="space-y-3">
+          <!-- Dynamically populated question cards -->
+        </div>
+      </div>
+
+      <!-- Actions Row -->
+      <div class="no-print flex flex-wrap items-center justify-between gap-3 p-4 rounded-lg bg-slate-50 border border-slate-200">
+        <button id="btn-retake" class="px-4 py-2 rounded bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-medium flex items-center gap-1.5 transition">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Retake Session
+        </button>
+
+        <button id="btn-print-report" class="px-4 py-2 rounded bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium flex items-center gap-1.5 transition">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i> Download PDF Scorecard
+        </button>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         MODAL: PRACTICE PROGRESS DASHBOARD
+         ================================================================= -->
+    <div id="modal-history" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="clean-card p-6 max-w-lg w-full space-y-4 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <div class="flex items-center gap-1.5 text-slate-900 font-bold text-sm">
+            <i data-lucide="trending-up" class="w-4 h-4 text-slate-700"></i>
+            Practice History
+          </div>
+          <button id="btn-close-history" class="text-slate-400 hover:text-slate-700">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[10px] text-slate-500 block">Total Sessions</span>
+            <span class="text-base font-bold text-slate-900" id="hist-total-sessions">0</span>
+          </div>
+          <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[10px] text-slate-500 block">Average Score</span>
+            <span class="text-base font-bold text-slate-900" id="hist-avg-score">0</span>
+          </div>
+          <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[10px] text-slate-500 block">Next Focus</span>
+            <span class="text-xs font-semibold text-slate-800 block mt-0.5" id="hist-next-focus">STAR Results</span>
+          </div>
+        </div>
+
+        <div class="space-y-1.5 max-h-52 overflow-y-auto" id="history-items-list">
+          <p class="text-xs text-slate-400 text-center py-4">No past sessions recorded yet.</p>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button id="btn-clear-history" class="text-xs text-slate-500 hover:text-rose-600 underline">Clear History</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================
+         MODAL: RE-ANSWER QUESTION ("TRY AGAIN")
+         ================================================================= -->
+    <div id="modal-try-again" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="clean-card p-6 max-w-xl w-full space-y-4 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <div class="flex items-center gap-1.5 text-slate-900 font-bold text-sm">
+            <i data-lucide="rotate-ccw" class="w-4 h-4 text-slate-700"></i>
+            Re-Answer Question
+          </div>
+          <button id="btn-close-try-again" class="text-slate-400 hover:text-slate-700">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="p-3 rounded bg-slate-50 border border-slate-200">
+          <span class="text-[10px] font-mono text-slate-500 font-bold uppercase block mb-0.5">Question</span>
+          <p id="try-again-question-text" class="text-xs font-semibold text-slate-900"></p>
+        </div>
+
+        <div class="p-3 rounded bg-slate-100 border border-slate-200">
+          <span class="text-[10px] font-mono text-slate-700 font-bold uppercase block mb-0.5">Tip for Better Score</span>
+          <p id="try-again-tip-text" class="text-xs text-slate-700"></p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">Your Revised Response</label>
+          <textarea id="try-again-input" rows="4" placeholder="Speak or type your updated answer with clear Situation, Action, and measurable Result..." class="w-full p-3 rounded-md bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-900"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-1">
+          <button id="btn-save-try-again" class="px-4 py-2 rounded bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs transition">
+            Evaluate Revised Response
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- =================================================================
+       API KEY MODAL
+       ================================================================= -->
+  <div id="modal-api-key" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="clean-card p-6 max-w-md w-full space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+        <div class="flex items-center gap-1.5 text-slate-900 font-bold text-sm">
+          <i data-lucide="settings" class="w-4 h-4 text-slate-700"></i>
+          API Configuration
+        </div>
+        <button id="btn-close-modal" class="text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600">
+        InterviewPulse runs using either a custom Google Gemini API key or the built-in deterministic evaluation engine.
+      </p>
+
+      <div>
+        <label class="block text-xs font-medium text-slate-700 mb-1">Google Gemini API Key (Optional)</label>
+        <input type="password" id="input-api-key" placeholder="AIzaSy..." class="w-full p-2.5 rounded bg-white border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-slate-900">
+        <p class="text-[10px] text-slate-500 mt-1">
+          Stored locally in your browser. <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-slate-900 underline font-medium">Get a free key &rarr;</a>
+        </p>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button id="btn-save-key" class="w-full py-2 rounded bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs transition">
+          Save Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="no-print mt-auto border-t border-slate-200 py-6 text-center text-xs text-slate-500 bg-white">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>Built for <strong>Ostad Presents YUNet AIgnite Buildathon 2026</strong> &bull; Consumer B2C Category</p>
+      <p class="font-mono text-slate-600">Developed by Sambhav Sharma &bull; Computer Science Engineer</p>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
