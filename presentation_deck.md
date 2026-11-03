@@ -62,6 +62,8 @@
   * **Q2 2026:** AI Resume & Portfolio File Upload (automatic PDF parsing).
   * **Q3 2026:** Non-Verbal Analysis (head posture and eye contact tracking using lightweight WebRTC).
   * **Q4 2026:** Ostad Direct Pipeline (connecting high-readiness candidates directly to hiring partners).
+* **Live Hosted Web App:** [https://sambhavsharma1.github.io/interview-pulse/](https://sambhavsharma1.github.io/interview-pulse/)
+* **Public GitHub Repository:** [https://github.com/SambhavSharma1/interview-pulse](https://github.com/SambhavSharma1/interview-pulse)
 * **Instant Demo for Judges:** One-click instant evaluation mode available right on the top navbar.
 * **Built For Ostad Presents YUNet AIgnite Buildathon 2026**
 
