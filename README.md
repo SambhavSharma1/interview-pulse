@@ -32,13 +32,6 @@ Over **80% of university students and fresh graduates** experience crippling com
 
 ---
 
-## 🚀 How to Run Locally
-No complex runtime or build step required:
-1. Double-click [`index.html`](./index.html) to open directly in Google Chrome or Microsoft Edge.
-2. Or run any local static server (e.g. `python -m http.server 3000`).
-
----
-
 ## 🛠️ Tech Stack
 * **Frontend:** Modern HTML5, Tailwind CSS, Lucide Icons, Chart.js.
 * **Audio & Voice Engine:** Web Speech API (`SpeechRecognition` & `SpeechSynthesis`).
